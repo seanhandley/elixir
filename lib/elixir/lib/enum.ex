@@ -2440,6 +2440,25 @@ defmodule Enum do
   end
 
   @doc """
+  Returns the sum of all elements with the given function applied.
+
+  Raises `ArithmeticError` if `enumerable` contains a non-numeric value or
+  if the given function returns a non-numeric value.
+
+  ## Examples
+
+      iex> Enum.sum([1, 2, 3], &(&1 * 2))
+      12
+
+  """
+  @spec sum(t, (element -> number)) :: number
+  def sum(enumerable, fun) do
+    Enum.reduce(enumerable, 0, fn element, acc ->
+      acc + fun.(element)
+    end)
+  end
+
+  @doc """
   Takes the first `amount` items from the `enumerable`.
 
   If a negative `amount` is given, the `amount` of last values will be taken.

@@ -724,6 +724,30 @@ defmodule EnumTest do
     end
   end
 
+  test "sum/2" do
+    assert Enum.sum([], & &1) == 0
+    assert Enum.sum([1], &(&1 * 2)) == 2
+    assert Enum.sum([1, 2, 3], &(&1 * 2)) == 12
+    assert Enum.sum([1.1, 2.2, 3.3], &(&1 * 2)) == 13.2
+    assert Enum.sum([-3, -2, -1, 0, 1, 2, 3], &(&1 * 2)) == 0
+    assert Enum.sum(42..42, &(&1 * 2)) == 84
+    assert Enum.sum(11..17, &(&1 * 2)) == 196
+    assert Enum.sum(17..11, &(&1 * 2)) == 196
+    assert Enum.sum(11..-17, &(&1 * 2)) == Enum.sum(-17..11, &(&1 * 2))
+
+    assert_raise ArithmeticError, fn ->
+      Enum.sum([{}], &(&1 * 2))
+    end
+
+    assert_raise ArithmeticError, fn ->
+      Enum.sum([1, {}], &(&1 * 2))
+    end
+
+    assert_raise ArithmeticError, fn ->
+      Enum.sum([1, 2], &String.duplicate("a", &1))
+    end
+  end
+
   test "take/2" do
     assert Enum.take([1, 2, 3], 0) == []
     assert Enum.take([1, 2, 3], 1) == [1]
